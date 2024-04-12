@@ -17,7 +17,6 @@ import os
 import streamlit as st
 import time
 import requests
-import pickle
 import json
 from bot_config.utils import get_config
 from vectorstore.vectorstore_updater import update_vectorstore, create_vectorstore
@@ -38,6 +37,7 @@ from datasets import Dataset
 import matplotlib.pyplot as plt
 from PIL import Image
 from continuous_eval.metrics import PrecisionRecallF1, RankedRetrievalMetrics, DeterministicAnswerCorrectness, DeterministicFaithfulness, BertAnswerRelevance, BertAnswerSimilarity, DebertaAnswerScores
+import fickling
 
 llm_2 = ChatNVIDIA(model="playground_steerlm_llama_70b")
 nv_embedder = NVIDIAEmbeddings(model="nvolveqa_40k")
@@ -217,7 +217,7 @@ if st.button("Run synthetic data generation"):
         gen_chain = langchain_prompt | llm | StrOutputParser()
         print("Done processing")
         with open(os.path.join(CORE_DIR, "vectorstore_nv.pkl"), "rb") as f:
-            vectorstore = pickle.load(f)
+            vectorstore = fickling.load(f)
             print("Done loading vectorstore")
         retriever = vectorstore.as_retriever(search_kwargs={"k": 3, "score_threshold": 0.5})
         # loop on a few sample chunks

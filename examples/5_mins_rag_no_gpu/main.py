@@ -22,6 +22,7 @@
 
 import streamlit as st
 import os
+import fickling
 
 st.set_page_config(layout = "wide")
 
@@ -76,7 +77,7 @@ vector_store_exists = os.path.exists(vector_store_path)
 vectorstore = None
 if use_existing_vector_store == "Yes" and vector_store_exists:
     with open(vector_store_path, "rb") as f:
-        vectorstore = pickle.load(f)
+        vectorstore = fickling.load(f)
     with st.sidebar:
         st.success("Existing vector store loaded successfully.")
 else:

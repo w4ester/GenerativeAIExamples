@@ -31,6 +31,7 @@ import multiprocessing
 import pickle
 import re
 import pandas as pd
+import fickling
 
 
 CUSTOM_PROCESSING = True
@@ -165,7 +166,7 @@ def update_vectorstore(folder, config_name, status=None):
     # status(label="[Step 1/4] Creating/loading vector store", state="complete", expanded=False)
     
     with open(os.path.join(folder, "vectorstore_nv.pkl"), "rb") as f:
-        vectorstore = pickle.load(f)
+        vectorstore = fickling.load(f)
     # status("[Step 2/4] Processing and splitting documents", state="complete", expanded=False)
     prev_folder = folder
     folder = os.path.join(folder, "new_files")

@@ -15,7 +15,6 @@
 
 from retriever.embedder import Embedder
 from retriever.vector import VectorClient
-import pickle
 import os
 from typing import List
 from langchain.chains import LLMChain
@@ -26,6 +25,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain.retrievers.multi_query import MultiQueryRetriever
 from langchain_nvidia_ai_endpoints import ChatNVIDIA, NVIDIAEmbeddings
+import fickling
 
 def clean_source(full_path):
     return os.path.basename(full_path)
@@ -45,7 +45,7 @@ class Retriever(BaseModel):
 
 def get_relevant_docs(DOCS_DIR, text, limit=None):
         with open(os.path.join(DOCS_DIR, "vectorstore_nv.pkl"), "rb") as f:
-            vectorstore = pickle.load(f)
+            vectorstore = fickling.load(f)
         
         retriever = vectorstore.as_retriever(search_type="similarity_score_threshold",
                                  search_kwargs={"score_threshold": .3, 
@@ -103,7 +103,7 @@ def get_relevant_docs_mq(DOCS_DIR, text):
         str: relevant snippets from documents, separated by newline char
     """
     with open(os.path.join(DOCS_DIR, "vectorstore_nv.pkl"), "rb") as f:
-        vectorstore = pickle.load(f)
+        vectorstore = fickling.load(f)
 
     llm = ChatNVIDIA(model="playground_llama2_70b")
     llm_chain = LLMChain(llm=llm, prompt=QUERY_PROMPT, output_parser=output_parser)

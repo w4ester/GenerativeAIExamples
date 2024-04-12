@@ -167,7 +167,7 @@ def get_vector_index(collection_name: str = "") -> VectorStoreIndex:
 
         with conn.cursor() as c:
             # Check for database existence first
-            c.execute(f"SELECT 1 FROM pg_database WHERE datname = '{db_name}'")
+            c.execute("SELECT 1 FROM pg_database WHERE datname = ?", (db_name, ))
             if not c.fetchone():  # Database doesn't exist
                 c.execute(f"CREATE DATABASE {db_name}")
 
@@ -378,8 +378,6 @@ def get_docs_vectorstore_langchain(vectorstore: VectorStore) -> List[str]:
 
     settings = get_config()
     try:
-        # No API availbe in LangChain for listing the docs, thus usig its private _dict 
-        extract_filename = lambda metadata : os.path.splitext(os.path.basename(metadata['source']))[0]
         if settings.vector_store.name == "faiss":
             in_memory_docstore = vectorstore.docstore._dict
             filenames = [extract_filename(doc.metadata) for doc in in_memory_docstore.values()]
@@ -406,8 +404,6 @@ def del_docs_vectorstore_langchain(vectorstore: VectorStore, filenames: List[str
 
     settings = get_config()
     try:
-        # No other API availbe in LangChain for listing the docs, thus usig its private _dict
-        extract_filename = lambda metadata : os.path.splitext(os.path.basename(metadata['source']))[0]
         if settings.vector_store.name == "faiss":
             in_memory_docstore = vectorstore.docstore._dict
             for filename in filenames:

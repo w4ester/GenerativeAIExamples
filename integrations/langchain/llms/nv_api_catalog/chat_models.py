@@ -94,7 +94,7 @@ def _url_to_b64_string(image_source: str) -> str:
     b64_template = "data:image/png;base64,{b64_string}"
     try:
         if _is_url(image_source):
-            response = requests.get(image_source)
+            response = requests.get(image_source, timeout=60)
             response.raise_for_status()
             encoded = base64.b64encode(response.content).decode("utf-8")
             if sys.getsizeof(encoded) > 200000:

@@ -22,6 +22,7 @@ import typing
 from jinja2 import Environment, FileSystemLoader
 
 from .model import Model, ModelFormats
+from security import safe_command
 
 _ENSEMBLE_MODEL_DIR = "/opt/ensemble_models"
 _TRITON_BIN = "/opt/tritonserver/bin/tritonserver"
@@ -146,7 +147,7 @@ class ModelServer:
 
         _LOGGER.debug("Starting triton with the command: %s", " ".join(cmd))
         _LOGGER.debug("Starting triton with the env vars: %s", repr(env))
-        with subprocess.Popen(cmd, env=env) as proc:
+        with safe_command.run(subprocess.Popen, cmd, env=env) as proc:
             try:
                 retcode = proc.wait()
             except KeyboardInterrupt:

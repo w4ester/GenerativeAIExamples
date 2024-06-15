@@ -24,6 +24,7 @@ import typing
 import time
 import os
 import requests
+from security import safe_requests
 
 _LOG_LEVEL = logging.getLevelName(os.environ.get('FRONTEND_LOG_LEVEL', 'WARN').upper())
 _LOGGER = logging.getLogger(__name__)
@@ -80,7 +81,7 @@ class ChatClient:
         data = {**defaults, **params}
         url = (f"{self.server_url}/generate")
         _LOGGER.debug("making request - %s", str({"server_url": url, "post_data": data}))
-        with requests.get(url, stream=True, json=data) as req:
+        with safe_requests.get(url, stream=True, json=data) as req:
             for chunk in req.iter_content():
                 yield chunk.decode("UTF-8")
 

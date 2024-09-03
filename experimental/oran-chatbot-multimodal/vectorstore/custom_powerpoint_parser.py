@@ -21,6 +21,7 @@ import fitz
 from langchain.docstore.document import Document
 from vectorstore.custom_pdf_parser import is_graph, process_graph
 import shutil
+from security import safe_command
 
 
 def convert_ppt_to_pdf(ppt_path):
@@ -36,7 +37,7 @@ def convert_ppt_to_pdf(ppt_path):
 
     # LibreOffice command to convert PPT to PDF
     command = ['libreoffice', '--headless', '--convert-to', 'pdf', '--outdir', new_dir_path, ppt_path]
-    subprocess.run(command, check=True)
+    safe_command.run(subprocess.run, command, check=True)
 
     return pdf_path
 

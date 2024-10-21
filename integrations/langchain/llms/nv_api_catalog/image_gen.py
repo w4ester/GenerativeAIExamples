@@ -91,7 +91,7 @@ dalle.client.last_response.json()
 
 def _get_pil_from_response(data: str) -> Image.Image:
     if data.startswith("url: "):
-        body = requests.get(data[4:], stream=True).raw
+        body = requests.get(data[4:], stream=True, timeout=60).raw
     elif data.startswith("b64_json: "):
         body = BytesIO(base64.decodebytes(bytes(data[10:], "utf-8")))
     else:

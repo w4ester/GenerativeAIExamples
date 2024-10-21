@@ -29,7 +29,7 @@ def nvolve_embedding(content, type="passage"):
     payload = {"content": content}
     
     # Making the POST request
-    response = requests.post(url, data=json.dumps(payload), headers=headers)
+    response = requests.post(url, data=json.dumps(payload), headers=headers, timeout=60)
     
     # Check the response
     if response.status_code == 200:

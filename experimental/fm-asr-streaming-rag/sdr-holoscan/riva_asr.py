@@ -52,7 +52,7 @@ class RivaThread(threading.Thread):
 
     def _post_request(self, endpoint, data):
         try:
-            client_response = requests.post(endpoint, json=data)
+            client_response = requests.post(endpoint, json=data, timeout=60)
             self.logger.debug(f'Posted {data}, got response {client_response._content}')
             self.logger.debug("--------------------------")
         except requests.exceptions.ConnectionError:

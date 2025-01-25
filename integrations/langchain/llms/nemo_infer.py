@@ -116,7 +116,7 @@ class NemoInfer(LLM):
                 data, text_callback, **kwargs
             )
         try:
-            response = requests.post(self.server_url, json=data)
+            response = requests.post(self.server_url, json=data, timeout=60)
             resp = response.json()
             resp = resp.get("choices", [{}])[0].get("text", "")
             return resp
@@ -132,7 +132,7 @@ class NemoInfer(LLM):
     ) -> str:
         """parse streaming response from nemo ms api
         """
-        response = requests.post(self.server_url, json=data, stream=True)
+        response = requests.post(self.server_url, json=data, stream=True, timeout=60)
         current_string = ""
         resp = ""
 

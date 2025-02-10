@@ -19,7 +19,6 @@ import abc
 import json
 import logging
 import queue
-import random
 import time
 from functools import partial
 from typing import Any, Callable, Dict, List, Optional, Type, Union
@@ -30,6 +29,7 @@ import tritonclient.grpc as grpcclient
 import tritonclient.http as httpclient
 from tritonclient.grpc.service_pb2 import ModelInferResponse
 from tritonclient.utils import np_to_triton_dtype
+import secrets
 
 try:
     from langchain.callbacks.manager import CallbackManagerForLLMRun
@@ -154,7 +154,7 @@ if USE_LANGCHAIN:
                 invocation_params["prompt"] = [[prompt]]
                 model_params = self._identifying_params
                 model_params.update(kwargs)
-                request_id = str(random.randint(1, 9999999))  # nosec
+                request_id = str(secrets.SystemRandom().randint(1, 9999999))  # nosec
 
                 self.client.load_model(model_params["model_name"])
                 if isinstance(self.client, GrpcTritonClient):
@@ -497,7 +497,7 @@ class GrpcTritonClient(_BaseTritonClient):
             raise RuntimeError("Cannot request streaming, model is not loaded")
 
         if not request_id:
-            request_id = str(random.randint(1, 9999999))  # nosec
+            request_id = str(secrets.SystemRandom().randint(1, 9999999))  # nosec
 
         result_queue = StreamingResponseGenerator(self, request_id, force_batch)
         inputs = self._generate_inputs(stream=not force_batch, **params)

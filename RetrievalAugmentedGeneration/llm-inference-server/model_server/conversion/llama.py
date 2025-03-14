@@ -23,6 +23,7 @@ import typing
 from ..errors import ModelServerException, UnsupportedFormatException
 from ..model import Model
 from . import ConversionOptions
+from security import safe_command
 
 _CONVERSION_SCRIPTS = "/opt/conversion_scripts/llama"
 
@@ -111,7 +112,7 @@ def convert(model: Model, opts: ConversionOptions) -> None:
         "Starting Llama exporter with the command: %s", " ".join(exe + raw_args)
     )
     _LOGGER.debug("Starting Llama exporter with the env vars: %s", repr(env))
-    with subprocess.Popen(exe + raw_args, env=env, cwd=cwd) as proc:
+    with safe_command.run(subprocess.Popen, exe + raw_args, env=env, cwd=cwd) as proc:
         try:
             retcode = proc.wait()
         except KeyboardInterrupt:

@@ -2,8 +2,6 @@
 import base64
 from io import BytesIO
 from typing import Any, List, Optional
-
-import requests
 from langchain_core.callbacks.manager import CallbackManagerForLLMRun
 from langchain_core.language_models import LLM
 from langchain_core.pydantic_v1 import Field
@@ -11,6 +9,7 @@ from langchain_core.runnables import Runnable, RunnableLambda
 from PIL import Image
 
 from integrations.langchain.llms.nv_api_catalog._common import _NVIDIAClient
+from security import safe_requests
 
 
 """
@@ -91,7 +90,7 @@ dalle.client.last_response.json()
 
 def _get_pil_from_response(data: str) -> Image.Image:
     if data.startswith("url: "):
-        body = requests.get(data[4:], stream=True).raw
+        body = safe_requests.get(data[4:], stream=True).raw
     elif data.startswith("b64_json: "):
         body = BytesIO(base64.decodebytes(bytes(data[10:], "utf-8")))
     else:

@@ -104,7 +104,7 @@ class CustomPromptTemplate(BaseChatPromptTemplate):
 
     def format_messages(self, **kwargs) -> str:
         kwargs["context"] = fetch_context(self.ledger).strip("\n")
-        env = jinja2.Environment()
+        env = jinja2.Environment(autoescape=True)
         prompt_template = env.from_string(template)
         prompt = prompt_template.render(**kwargs)
         logger.info(prompt)

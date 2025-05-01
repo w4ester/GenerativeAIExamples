@@ -56,7 +56,7 @@ class ChatClient:
         tries = 0
         while not connected:
             try:
-                response = requests.post(f"{self.server_url}/app/get_all_devices_status")
+                response = requests.post(f"{self.server_url}/app/get_all_devices_status", timeout=60)
                 connected = True
             except Exception as e:
                 tries += 1
@@ -80,7 +80,7 @@ class ChatClient:
         data = {**defaults, **params}
         url = (f"{self.server_url}/generate")
         _LOGGER.debug("making request - %s", str({"server_url": url, "post_data": data}))
-        with requests.get(url, stream=True, json=data) as req:
+        with requests.get(url, stream=True, json=data, timeout=60) as req:
             for chunk in req.iter_content():
                 yield chunk.decode("UTF-8")
 

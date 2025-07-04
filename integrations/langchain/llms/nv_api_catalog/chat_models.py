@@ -22,8 +22,6 @@ from typing import (
     Type,
     Union,
 )
-
-import requests
 from langchain_core.callbacks.manager import (
     AsyncCallbackManagerForLLMRun,
     CallbackManagerForLLMRun,
@@ -45,6 +43,7 @@ from langchain_core.runnables.config import run_in_executor
 from langchain_core.tools import BaseTool
 
 from integrations.langchain.llms.nv_api_catalog import _common as nvidia_ai_endpoints
+from security import safe_requests
 
 _CallbackManager = Union[AsyncCallbackManagerForLLMRun, CallbackManagerForLLMRun]
 _DictOrPydanticClass = Union[Dict[str, Any], Type[BaseModel]]
@@ -94,7 +93,7 @@ def _url_to_b64_string(image_source: str) -> str:
     b64_template = "data:image/png;base64,{b64_string}"
     try:
         if _is_url(image_source):
-            response = requests.get(image_source)
+            response = safe_requests.get(image_source)
             response.raise_for_status()
             encoded = base64.b64encode(response.content).decode("utf-8")
             if sys.getsizeof(encoded) > 200000:

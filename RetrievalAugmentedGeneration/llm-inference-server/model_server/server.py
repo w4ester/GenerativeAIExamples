@@ -118,8 +118,7 @@ class ModelServer:
         """Render and Jinja templates in the model directory."""
         env = Environment(
             loader=FileSystemLoader(searchpath=self.model_repository),
-            autoescape=False,
-        )  # nosec; all the provided values are from code, not the user
+            autoescape=True)  # nosec; all the provided values are from code, not the user
 
         template_path = os.path.join("tensorrt_llm", "config.pbtxt.j2")
         output_path = os.path.join(
